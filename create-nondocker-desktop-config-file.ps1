@@ -1,84 +1,42 @@
-#Declare the folder name
-$folderName = "config"
+function Create-DockerConfig {
+    param (
+        [string]$folderName = "config",
+        [string]$parentDirectory = "C:\ProgramData\docker",
+        [string]$jsonFileName = "daemon.json"
+    )
 
-#Declare the parent directory where you want to create the config folder
-$parentDirectory = "C:\ProgramData\docker"
+    # Combine paths
+    $folderPath = Join-Path -Path $parentDirectory -ChildPath $folderName
+    $jsonFilePath = Join-Path -Path $folderPath -ChildPath $jsonFileName
 
-#Combine the parent directory and folder name to get the full path
-$folderPath = Join-Path -Path $parentDirectory -ChildPath $folderName
+    # Check for Docker installation
+    if (Test-Path $parentDirectory -PathType Container) {
+        Write-Host -ForegroundColor Green "Docker engine is installed, checking for '$folderName'."
 
-#Declare Json File Name
-$jsonFileName = "daemon.json"
+        # Check if config folder exists
+        if (-not (Test-Path $folderPath)) {
+            New-Item -ItemType Directory -Path $folderPath | Out-Null
+            Write-Host -ForegroundColor Green "Folder '$folderName' created successfully at $folderPath"
+        } else {
+            Write-Host -ForegroundColor Yellow "Folder '$folderName' already exists at $folderPath"
+        }
 
-#Combine the Json file path with the above specified config folder path, as Json file should be the children of the config folder
-$jsonFilePath = Join-Path -Path $folderPath -ChildPath $jsonFileName
-
-if (Test-Path $parentDirectory -PathType Container) {
-	
-	Write-Host   # Empty Write-Host for a new line
-	Write-Host "Docker engine is installed, checking for '$folderName'." -ForegroundColor Green
-
-	#Check if config folder already exists
-	if (-not (Test-Path $folderPath)) {
-	
-		#Create the folder if it doesn't exist
-		New-Item -ItemType Directory -Path $folderPath | Out-Null
-	
-		Write-Host   # Empty Write-Host for a new line
-		Write-Host "Folder '$folderName' created successfully at $folderPath" -ForegroundColor Green
-	
-		if (-not (Test-Path $jsonFilePath)) {
-			#Define the JSON data
-			$jsonData = @{
-				"debug" = $true
-				"dns" = @("8.8.8.8")
-				"experimental" = $false
-			}
-		
-			#Create and add Json data to the file
-			$jsonData | ConvertTo-Json | Out-File -FilePath $jsonFilePath
-		
-			Write-Host   # Empty Write-Host for a new line
-			Write-Host "File '$jsonFileName' created successfully at $jsonFilePath" -ForegroundColor Green
-			Write-Host   # Empty Write-Host for a new line
-		}
-		else
-		{
-			Write-Host   # Empty Write-Host for a new line
-			Write-Host "File '$jsonFileName' already exists at $jsonFilePath" -ForegroundColor Yellow
-			Write-Host   # Empty Write-Host for a new line
-		}
-	
-	} else {
-		Write-Host   # Empty Write-Host for a new line
-		Write-Host "Folder '$folderName' already exists at $folderPath" -ForegroundColor Yellow
-	
-		if (-not (Test-Path $jsonFilePath)) {
-			# Define the JSON data
-			$jsonData = @{
-				"debug" = $true
-				"dns"  = @("8.8.8.8")
-				"experimental" = $false
-			}
-		
-			# Write the JSON data to the file
-			#$jsonData | Out-File -FilePath $jsonFilePathFinal
-			$jsonData | ConvertTo-Json | Out-File -FilePath $jsonFilePath
-		
-			Write-Host   # Empty Write-Host for a new line
-			Write-Host "File '$jsonFileName' created successfully at $jsonFilePath" -ForegroundColor Green
-			Write-Host   # Empty Write-Host for a new line
-		}
-		else
-		{
-			Write-Host   # Empty Write-Host for a new line
-			Write-Host "File '$jsonFileName' already exists at $jsonFilePath" -ForegroundColor Yellow
-			Write-Host   # Empty Write-Host for a new line
-		}
-	}
+        # Check and create JSON file
+        if (-not (Test-Path $jsonFilePath)) {
+            $jsonData = @{
+                "debug" = $true
+                "dns" = @("8.8.8.8")
+                "experimental" = $false
+            }
+            $jsonData | ConvertTo-Json | Out-File -FilePath $jsonFilePath
+            Write-Host -ForegroundColor Green "File '$jsonFileName' created successfully at $jsonFilePath"
+        } else {
+            Write-Host -ForegroundColor Yellow "File '$jsonFileName' already exists at $jsonFilePath"
+        }
+    } else {
+        Write-Host -ForegroundColor Yellow "Docker engine is not installed, please install it first."
+    }
 }
-else {
-	Write-Host   # Empty Write-Host for a new line
-	Write-Host "Docker engine is not installed, please install it first." -ForegroundColor Yellow
-	Write-Host   # Empty Write-Host for a new line
-}
+
+# Example usage
+Create-DockerConfig -folderName "config" -parentDirectory "C:\ProgramData\docker" -jsonFileName "daemon.json"
