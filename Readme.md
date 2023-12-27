@@ -8,12 +8,14 @@ Welcome to the repository for PowerShell Scripts. This repository contains Power
 
 If we download any of the "PowerShell" script and try to execute it on "PowerShell" terminal, it will throw the below error.
 
-Error : The file "specific PowerShell script file name" is not digitally signed. You cannot run this script on the current system.
+**Error :** The file "specific PowerShell script file name" is not digitally signed. You cannot run this script on the current system.
 
 Whenever this error occurred, we have to execute the following command using "PowerShell" terminal and the error will be resolved.
 
     ```command
+
     Set-ExecutionPolicy Bypass -Scope Process
+    
    ```
 
 ### 1] create-nondocker-desktop-config-file.ps1
