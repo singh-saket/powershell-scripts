@@ -12,11 +12,9 @@ If we download any of the "PowerShell" script and try to execute it on "PowerShe
 
 Whenever this error occurred, we have to execute the following command using "PowerShell" terminal and the error will be resolved.
 
-    ```command
-
-    Set-ExecutionPolicy Bypass -Scope Process
-    
-   ```
+```command
+ Set-ExecutionPolicy Bypass -Scope Process 
+```
 
 ### 1] create-nondocker-desktop-config-file.ps1
 
