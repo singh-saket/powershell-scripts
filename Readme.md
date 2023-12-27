@@ -18,5 +18,7 @@ Whenever this error occurred, we have to execute the following command using "Po
 
 ### 1] create-nondocker-desktop-config-file.ps1
 
+**Note :** File is present inside the "Docker" folder.
+
 This PowerShell script is used to create "config" folder and "daemon.json" file along with the required configurations. It is being used to add the configuration file, when we are using "Docker" engine without "Docker Desktop", as by using this configuration file, we are able to debug the docker base project solutions.
 
